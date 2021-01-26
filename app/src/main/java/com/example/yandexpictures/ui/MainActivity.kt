@@ -13,14 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.filter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.ListPreloader
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.bumptech.glide.util.FixedPreloadSizeProvider
 import com.example.yandexpictures.databinding.ActivityMainBinding
 import com.example.yandexpictures.databinding.PicItemBinding
 import com.example.yandexpictures.model.Repo
@@ -52,7 +50,8 @@ class MainActivity : AppCompatActivity() {
         searchJob?.cancel()
         searchJob = lifecycleScope.launch {
             ViewModel.searchRepo(query).collect {
-                adapter.submitData(it)
+
+                adapter.submitData(it.filter { it.url !="" })
             }
         }
     }

@@ -19,8 +19,10 @@ package com.example.yandexpictures.ui
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.yandexpictures.R
 import com.example.yandexpictures.databinding.PicItemBinding
 import com.example.yandexpictures.model.Repo
@@ -34,9 +36,13 @@ class ViewHolder private constructor(val binding: PicItemBinding, val context: C
     private val imageHeightPixels = 768;
     fun bind(item: Repo) {
         binding.pic = item
-        Glide.with(binding.imageView.context)
-            .load(item.url)
-            .error(R.drawable.ic_launcher_background)
+        val url = item.url.toUri().buildUpon().scheme("https").build()
+        Glide.with(context)
+            .load(url)
+            .apply(
+                RequestOptions()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_launcher_background))
             .into(binding.imageView)
 
         binding.executePendingBindings()
